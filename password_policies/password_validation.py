@@ -3,20 +3,31 @@ from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
 from .models import PasswordRecord
+
+
+al = _('at least')
+p = _('piece')
+e1 = _("At least in uppercase, lowercase, numbers, special symbols")
+e2 = _("kind of characters")
+psk = _("Password should contain")
+ght = _('Password cannot be the same as the most recent')
+ght_p = _('repeated passwords used')
+islp = _('The interval since the last password change must be at least')
+d = _('days')
 
 
 class ComplexityValidator:
     def __init__(self, **kwargs):
         self.min_char_categories = kwargs.pop('min_char_categories', 4)
         self.min_chars_of_each_type = [
-            ('min_numeric_chars', r'[0-9]', '數字'),
-            ('min_uppercase_chars', r'[A-Z]', '大寫字母'),
-            ('min_lowercase_chars', r'[a-z]', '小寫字母'),
-            ('min_special_chars', r'[^0-9A-Za-z]', '特殊符號'),
+            ('min_numeric_chars', r'[0-9]', _('number')),
+            ('min_uppercase_chars', r'[A-Z]', _('uppercase letters')),
+            ('min_lowercase_chars', r'[a-z]', _('lowercase letters')),
+            ('min_special_chars', r'[^0-9A-Za-z]', _('special symbols')),
         ]
         for attr, _regex, _name in self.min_chars_of_each_type:
             setattr(
@@ -33,17 +44,17 @@ class ComplexityValidator:
             required = getattr(self, attr)
             if len(find) < required:
                 password_valid = False
-                errors.append(f"至少{required}個{name}字元")
+                errors.append(str(f"{al} {required} {p} {name}"))
             if find:
                 char_types_contained += 1
 
         if char_types_contained < self.min_char_categories:
             password_valid = False
-            errors.append(f"大寫、小寫、數字、特殊符號中至少{self.min_char_categories}種字元")
-
+            errors.append(f"{e1} {self.min_char_categories} {e2}")
         if not password_valid:
+            errs = ', '.join(errors)
             raise ValidationError(
-                f"密碼應包含{'；'.join(errors)}。",
+                _(f"{psk} {errs}"),
                 code='password_lacks_numeric_or_symbols',
             )
 
@@ -52,24 +63,21 @@ class ComplexityValidator:
         for attr, regex, name in self.min_chars_of_each_type:
             required = getattr(self, attr)
             if required:
-                requirements.append(f"至少{required}個{name}字元")
+                requirements.append(f"{al} {required} {p} {name}")
         if self.min_char_categories:
             requirements.append(
-                f"大寫、小寫、數字、特殊符號中至少{self.min_char_categories}種字元"
+                f"{e1} {self.min_char_categories} {e2}"
             )
-
-        return f"密碼應包含{'；'.join(requirements)}。"
+        reqs = ', '.join(requirements)
+        return f"{psk} {reqs}."
 
 
 class ReusedPasswordValidator:
-    # 密碼hash方式，參考 django.contrib.auth.base_user.AbstractBaseUser
-    # set_password(), check_password()
-    # Validator寫法參考：
     # https://docs.djangoproject.com/en/4.1/topics/auth/passwords/#writing-your-own-validator
 
     def __init__(self, record_length=3):
         if record_length <= 0:
-            raise ValueError('record_length must be larger than 0.')
+            raise ValueError(_('record_length must be larger than 0.'))
         self.record_length = record_length
 
     def validate(self, password, user=None):
@@ -90,9 +98,7 @@ class ReusedPasswordValidator:
                 )
 
     def get_help_text(self):
-        return _(
-            f"密碼不可與最近{self.record_length}次使用過的密碼重複。"
-        )
+        return f"{ght} {self.record_length} {ght_p}"
 
 
 class MinimumChangeIntervalValidator:
@@ -113,11 +119,9 @@ class MinimumChangeIntervalValidator:
         if (timezone.now() - latest_password_record.date) \
                 < self.min_interval:
             raise ValidationError(
-                _(f"距上次變更密碼須至少間隔{self.min_interval.days}日。"),
+                f"{islp} {self.min_interval.days} {d}.",
                 code='password_reset_interval',
             )
 
     def get_help_text(self):
-        return _(
-            f"距上次變更密碼須至少間隔{self.min_interval.days}日。"
-        )
+        return f"{islp} {self.min_interval.days} {d}."

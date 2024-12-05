@@ -14,12 +14,14 @@ class PasswordRecord(models.Model):
     password = models.CharField(
         'Password hash',
         max_length=128,
-        editable=False
+        editable=False,
+        db_index=True
     )
     date = models.DateTimeField(
         'Date',
         auto_now_add=True,
-        editable=False
+        editable=False,
+        db_index=True
     )
 
     class Meta:

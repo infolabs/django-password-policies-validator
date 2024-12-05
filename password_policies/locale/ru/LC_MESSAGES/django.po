@@ -1,0 +1,84 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-05 14:44+0000\n"
+"PO-Revision-Date: 2024-12-05 17:50+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.5\n"
+
+#: password_validation.py:12
+msgid "at least"
+msgstr "не менее"
+
+#: password_validation.py:13
+msgid "piece"
+msgstr "штук"
+
+#: password_validation.py:14
+msgid "At least in uppercase, lowercase, numbers, special symbols"
+msgstr ""
+"Из набора заглавных, строчных буква, чисел и специальных символов "
+"должно присутствовать не менее"
+
+#: password_validation.py:15
+msgid "kind of characters"
+msgstr "типов символов"
+
+#: password_validation.py:16
+msgid "Password should contain"
+msgstr "Пароль должен содержвть"
+
+#: password_validation.py:17
+msgid "Password cannot be the same as the most recent"
+msgstr "Пароль не может совпадать с"
+
+#: password_validation.py:18
+msgid "repeated passwords used"
+msgstr "последними использованными паролями"
+
+#: password_validation.py:19
+msgid "The interval since the last password change must be at least"
+msgstr "Интервал с момента последней смены пароля должен быть не менее"
+
+#: password_validation.py:20
+msgid "days"
+msgstr "дней"
+
+#: password_validation.py:27
+msgid "number"
+msgstr "чисел"
+
+#: password_validation.py:28
+msgid "uppercase letters"
+msgstr "заглавных букв"
+
+#: password_validation.py:29
+msgid "lowercase letters"
+msgstr "строчных букв"
+
+#: password_validation.py:30
+msgid "special symbols"
+msgstr "специальных символов"
+
+#: password_validation.py:57
+#, python-brace-format
+msgid "{psk} {errs}"
+msgstr "{psk} {errs}"
+
+#: password_validation.py:80
+msgid "record_length must be larger than 0."
+msgstr "record_length должно быть больше 0."
